@@ -1,3 +1,4 @@
+
 package com.portfolio.Roman_Dario_Esquivel.Service;
 
 import com.portfolio.Roman_Dario_Esquivel.Entity.Persona;
@@ -13,7 +14,7 @@ public class ImpPersonaService implements IPersonaService{
     
     @Override
     public List<Persona> getPersona() {
-        List<Persona>  persona = ipersonaRepository.findAll();
+        List<Persona> persona = ipersonaRepository.findAll();
         return persona;
     }
 
