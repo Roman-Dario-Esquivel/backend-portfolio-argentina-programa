@@ -1,7 +1,9 @@
 package com.portafolio.Roman_Dario_Esquivel.Security.Jwt;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.portafolio.Roman_Dario_Esquivel.Security.Service.UserDetailsImpl;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
         } catch (UsernameNotFoundException e) {
             logger.error("Fallí el metodo doFilterInternal");
+        } catch (FirebaseAuthException ex) {
+            java.util.logging.Logger.getLogger(JwtTokenFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
         filterChain.doFilter(request, response);
     }

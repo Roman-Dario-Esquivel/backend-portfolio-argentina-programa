@@ -18,6 +18,7 @@ com\portafolio\Roman_Dario_Esquivel\Security\Dto\JwtDto.class
 com\portafolio\Roman_Dario_Esquivel\Service\ImpPersonaService.class
 com\portafolio\Roman_Dario_Esquivel\Dto\ProyectoDto.class
 com\portafolio\Roman_Dario_Esquivel\Security\Service\RolService.class
+com\portafolio\Roman_Dario_Esquivel\firebase\configuration.class
 com\portafolio\Roman_Dario_Esquivel\Repository\IPersonaRepository.class
 com\portafolio\Roman_Dario_Esquivel\Security\Controller\Mensaje.class
 com\portafolio\Roman_Dario_Esquivel\Entity\Proyectos.class

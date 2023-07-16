@@ -1,5 +1,6 @@
 package com.portafolio.Roman_Dario_Esquivel.Security.Controller;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.JwtDto;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.LoginUsuario;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.NuevoUsuario;
@@ -75,7 +76,7 @@ public class AuthController {
     
     
     @PostMapping("/login")
-    public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
+    public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult) throws FirebaseAuthException{
         if(bindingResult.hasErrors())
             return new ResponseEntity(new Mensaje("Campos mal puestos"), HttpStatus.BAD_REQUEST);
         
