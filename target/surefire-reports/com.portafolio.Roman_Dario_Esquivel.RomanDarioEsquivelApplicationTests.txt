@@ -1,10 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.portafolio.Roman_Dario_Esquivel.RomanDarioEsquivelApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 15.793 s <<< FAILURE! - in com.portafolio.Roman_Dario_Esquivel.RomanDarioEsquivelApplicationTests
-contextLoads  Time elapsed: 0.005 s  <<< ERROR!
-java.lang.IllegalStateException: Failed to load ApplicationContext
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'configuration': Invocation of init method failed; nested exception is java.io.IOException: Error reading credential file from environment variable GOOGLE_APPLICATION_CREDENTIALS, value 'D:\DARIO\DARIO\argentinaprograma\backend\Roman_Dario_Esquiveljava8spring2,7\backend-portfolio-argentina-programa\src\main\java\com\portafolio\Roman_Dario_Esquivel\firebase\romandarioesquivelfirebase.json': File does not exist.
-Caused by: java.io.IOException: Error reading credential file from environment variable GOOGLE_APPLICATION_CREDENTIALS, value 'D:\DARIO\DARIO\argentinaprograma\backend\Roman_Dario_Esquiveljava8spring2,7\backend-portfolio-argentina-programa\src\main\java\com\portafolio\Roman_Dario_Esquivel\firebase\romandarioesquivelfirebase.json': File does not exist.
-Caused by: java.io.IOException: File does not exist.
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.456 s - in com.portafolio.Roman_Dario_Esquivel.RomanDarioEsquivelApplicationTests
