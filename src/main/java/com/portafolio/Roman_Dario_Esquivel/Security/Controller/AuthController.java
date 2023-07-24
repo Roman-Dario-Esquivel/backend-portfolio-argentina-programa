@@ -1,6 +1,8 @@
 package com.portafolio.Roman_Dario_Esquivel.Security.Controller;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.JwtDto;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.LoginUsuario;
 import com.portafolio.Roman_Dario_Esquivel.Security.Dto.NuevoUsuario;
@@ -32,10 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-
-//@CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = {"https://romandarioesquivel-9162f.web.app/","https://romandarioesquivel-9162f.firebaseapp.com/"})
+@CrossOrigin(origins = {"https://romandarioesquivel-9162f.web.app/", "https://romandarioesquivel-9162f.firebaseapp.com/", "http://localhost:4200"})
 public class AuthController {
+
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -46,52 +47,70 @@ public class AuthController {
     RolService rolService;
     @Autowired
     JwtProvider jwtProvider;
-    
-    
+
     @PostMapping("/nuevoUsuario")
     public ResponseEntity<?> nuevoUsuario(@Valid @RequestBody NuevoUsuario nuevoUsuario,
-                                          BindingResult bindingResult){
-         if(bindingResult.hasErrors())
-            return new ResponseEntity(new Mensaje("Campos mal puestos o email invalido"),HttpStatus.BAD_REQUEST);
-        
-        if(usuarioService.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity(new Mensaje("Campos mal puestos o email invalido"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (usuarioService.existsByNombreUsuario(nuevoUsuario.getNombreUsuario())) {
             return new ResponseEntity(new Mensaje("Ese nombre de usuario ya existe"), HttpStatus.BAD_REQUEST);
-        
-        if(usuarioService.existsByEmail(nuevoUsuario.getEmail()))
+        }
+
+        if (usuarioService.existsByEmail(nuevoUsuario.getEmail())) {
             return new ResponseEntity(new Mensaje("Ese email ya existe"), HttpStatus.BAD_REQUEST);
-        
+        }
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = "";
+        String email = nuevoUsuario.getEmail();
+        String password = nuevoUsuario.getPassword();
+        try {
+            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                    .setEmail(email)
+                    .setPassword(password);
+            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
+            uid = userRecord.getUid();
+            System.out.println("UID: " + uid);
+        } catch (FirebaseAuthException e) {
+            System.out.println("Error creating user: " + e.getMessage());
+        }
+
         usuario usuario = new usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),
-            nuevoUsuario.getEmail(), passwordEncoder.encode(nuevoUsuario.getPassword()));
-        
+                nuevoUsuario.getEmail(), passwordEncoder.encode(nuevoUsuario.getPassword()), uid);
+
         Set<Rol> roles = new HashSet<>();
         roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
-        
-        if(nuevoUsuario.getRoles().contains("admin"))
+
+        if (nuevoUsuario.getRoles().contains("admin")) {
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+        }
         usuario.setRoles(roles);
         usuarioService.save(usuario);
-        
-        return new ResponseEntity(new Mensaje("Usuario guardado"),HttpStatus.CREATED);
+
+        return new ResponseEntity(new Mensaje("Usuario guardado"), HttpStatus.CREATED);
     }
-    
-    
+
     @PostMapping("/login")
-    public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult) throws FirebaseAuthException{
-        if(bindingResult.hasErrors())
+    public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult) throws FirebaseAuthException {
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity(new Mensaje("Campos mal puestos"), HttpStatus.BAD_REQUEST);
-        
+        }
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-        loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
-        
+                loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         String jwt = jwtProvider.generateToken(authentication);
-        
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        
+
         JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());
-        
+
         return new ResponseEntity(jwtDto, HttpStatus.OK);
     }
-    
+
 }

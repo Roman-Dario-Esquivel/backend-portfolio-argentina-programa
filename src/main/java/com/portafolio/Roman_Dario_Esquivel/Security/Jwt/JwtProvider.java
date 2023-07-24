@@ -21,7 +21,7 @@ public class JwtProvider {
      
     public String generateToken(Authentication authentication) throws FirebaseAuthException{
         UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();
-        uid = usuarioPrincipal.getNombre();
+        uid = usuarioPrincipal.getUid();
          String customTokenFirebase;
          customTokenFirebase = FirebaseAuth.getInstance().createCustomToken(uid);
         return customTokenFirebase;

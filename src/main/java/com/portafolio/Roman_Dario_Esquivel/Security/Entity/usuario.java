@@ -30,6 +30,8 @@ public class usuario {
     private String email;
     @NotNull
     private String password;
+    @NotNull
+    private String uid;
   
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
@@ -39,15 +41,24 @@ public class usuario {
     public usuario() {
     }
 
-    public usuario(String nombre, String nombreUsuario, String email, String password) {
+    public usuario(String nombre, String nombreUsuario, String email, String password, String uid) {
         this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;
         this.email = email;
         this.password = password;
- 
+        this.uid = uid;
     }
+
     //setter y getter
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+    
     public Long getId() {
         return id;
     }
